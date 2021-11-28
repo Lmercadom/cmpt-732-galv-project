@@ -1,11 +1,14 @@
 from pyspark.sql import SparkSession, functions, types
 import sys
+import utils
+
 assert sys.version_info >= (3, 5)  # make sure we have Python 3.5+
 
 # add more functions as necessary
+BUCKET = 'galv'
 
 
-def main(inputs, keyspace, table):
+def main(inputs, table):
     # main logic starts here
     df = spark.read.json(inputs).cache()
     df.createOrReplaceTempView('Original')
@@ -60,13 +63,14 @@ def main(inputs, keyspace, table):
     restaurants_df.write.mode("overwrite").parquet(
         f"output/{restaurantsTable}.parquet")
 
+    utils.upload_files('output', BUCKET)
+
 
 if __name__ == '__main__':
     inputs = sys.argv[1]
-    keyspace = sys.argv[2]
-    table = sys.argv[3]
+    table = sys.argv[2]
     spark = SparkSession.builder.appName('GALV project').getOrCreate()
     assert spark.version >= '3.0'  # make sure we have Spark 3.0+
     spark.sparkContext.setLogLevel('WARN')
     sc = spark.sparkContext
-    main(inputs, keyspace, table)
+    main(inputs, table)
