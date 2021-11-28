@@ -2,7 +2,7 @@ import boto3
 import os
 
 
-def upload_files(path, bucketName):
+def upload_files_to_s3(path, bucketName):
     session = boto3.Session(
         profile_name='dev',
         region_name='us-west-2',

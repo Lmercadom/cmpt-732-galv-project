@@ -63,7 +63,7 @@ def main(inputs, table):
     restaurants_df.write.mode("overwrite").parquet(
         f"output/{restaurantsTable}.parquet")
 
-    utils.upload_files('output', BUCKET)
+    utils.upload_files_to_s3('output', BUCKET)
 
 
 if __name__ == '__main__':
