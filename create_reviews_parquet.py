@@ -2,6 +2,7 @@ import sys
 assert sys.version_info >= (3, 5) # make sure we have Python 3.5+
 
 from pyspark.sql import SparkSession, functions, types
+from pyspark.sql.functions import broadcast
 
 def main(business_file, reviews_file, outdir):
     reviews_schema = types.StructType([
@@ -17,7 +18,9 @@ def main(business_file, reviews_file, outdir):
     ])
 
     # Read business ids from business table
-    business_ids= spark.read.parquet('s3://galv/restaurants.parquet/').select('business_id')
+    #TODO: Change code for connecting from S3
+    # business_ids= spark.read.parquet('s3://galv/restaurants.parquet/').select('business_id')
+    business_ids= spark.read.parquet(business_file).select('business_id')
     # Read reviews json
     all_reviews = spark.read.json(reviews_file, schema=reviews_schema).repartition(16)
     # Keep reviews liked to business ids of interest
@@ -26,7 +29,8 @@ def main(business_file, reviews_file, outdir):
 
     filtered_reviews.write.mode("overwrite").parquet(outdir + '/reviews.parquet')
 
-    utils.upload_files_to_s3(output, BUCKET)
+    # TODO: change when common file access in found
+    # utils.upload_files_to_s3(output, BUCKET)
 
 
 if __name__ == '__main__':
