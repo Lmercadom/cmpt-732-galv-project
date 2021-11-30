@@ -2,3 +2,4 @@ output
 output/*
 *.pyc
 data
+jar_files
