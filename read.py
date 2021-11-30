@@ -22,8 +22,8 @@ def main():
 
 
 if __name__ == '__main__':
-    spark = SparkSession.builder.appName('example code').config('fs.s3a.access.key', 'AKIA6MYF3MZWDVWNINWG') \
-    .config('fs.s3a.secret.key', 'rUhO5NEzDBcZ6jIVjCUk3IdFRAzsc6+UHsrLAI2n') \
+    spark = SparkSession.builder.appName('example code').config('fs.s3a.access.key', 'KEY') \
+    .config('fs.s3a.secret.key', 'ACCESS') \
     .config("fs.s3a.endpoint", "us-west-2.amazonaws.com").getOrCreate()
 
     assert spark.version >= '3.0'  # make sure we have Spark 3.0+
