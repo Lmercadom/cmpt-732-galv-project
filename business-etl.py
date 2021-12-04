@@ -33,7 +33,7 @@ def main(inputs, table):
     business_df.createOrReplaceTempView('Business')
     categories_df.createOrReplaceTempView('Categories')
     restaurants_df = spark.sql("""
-                               select Business.business_id,
+                               select distinct Business.business_id,
                                 name,
                                 address,
                                 latitude,
@@ -49,12 +49,28 @@ def main(inputs, table):
                                where Categories.categories like '%Restaurants' or   
                                     Categories.categories like '%Cafe%'
                                """)
+    categories_df.createOrReplaceTempView('Restaurants')
+    attributes_df = spark.sql("""
+                               select Original.business_id,
+                               attributes.*
+                               from Original
+                               where Original.business_id in (select distinct Restaurants.business_id from Restaurants) 
+                               """)
+    hours_df = spark.sql("""
+                               select Original.business_id,
+                               hours.*
+                               from Original 
+                               where Original.business_id in (select distinct Restaurants.business_id from Restaurants) 
+                               """)
 
     categories_df = categories_df.repartition(16)
     business_df = business_df.repartition(16)
     restaurants_df = restaurants_df.repartition(16)
+    attributes_df = attributes_df.repartition(16)
+    hours_df = hours_df.repartition(16)
 
-    (businessTable, categoriesTable, restaurantsTable) = table.split(',')
+    (businessTable, categoriesTable, restaurantsTable,
+     attributesTable, hoursTable) = table.split(',')
 
     business_df.write.mode("overwrite").parquet(
         f"output/{businessTable}.parquet")
@@ -62,6 +78,10 @@ def main(inputs, table):
         f"output/{categoriesTable}.parquet")
     restaurants_df.write.mode("overwrite").parquet(
         f"output/{restaurantsTable}.parquet")
+    attributes_df.write.mode("overwrite").parquet(
+        f"output/{attributesTable}.parquet")
+    hours_df.write.mode("overwrite").parquet(
+        f"output/{hoursTable}.parquet")
 
     utils.upload_files_to_s3('output', BUCKET)
 
