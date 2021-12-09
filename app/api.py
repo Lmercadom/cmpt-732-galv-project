@@ -1,12 +1,12 @@
-import json
+
 import sys
 import logging
-import pandas as pd
 import numpy as np
+import pandas as pd
 from geopy import distance
 from geopy.geocoders import Nominatim
 
-from utils import create_logger, get_word_vec
+from utils import create_logger, get_word_vec, read_business_file
 from plot_utils import show_recomm
 
 logger = create_logger()
@@ -27,9 +27,10 @@ def get_coordinates(location_str):
 
 def filter_df(df, coord):
     """
+    DEPRECATED
     filter the df to only calculate distance of some businesses
     :rtype: object
-    :param df: dataframe with lat, long, business_categories, business_name
+    :param df: dataframe with lat, long, categories, name
     :param coord: tuple
     :return: filter mask pd.Series
     """
@@ -38,17 +39,17 @@ def filter_df(df, coord):
     int_lat = int(coord[0])
     int_long = int(coord[1])
 
-    # keep only the businesses that have same whole number coordinates
+    # keep only the businesses that have same lat or long deg
     # from geopy import distance
     # print(distance.distance((52.0, 21.0), (52.0, 20.0)).km)
     # 68.6774747898976
     #
     # print(distance.distance((52.0, 20.0), (51.0, 20.0)).km)
     # 111.257 which is way too far to be a useful recommendation
-    df.business_latitude = df.business_latitude.astype(int)
-    df.business_longitude = df.business_longitude.astype(int)
+    df.latitude = df.latitude.astype(int)
+    df.longitude = df.longitude.astype(int)
 
-    df.loc[(df.business_latitude == int_lat) | (df.business_longitude == int_long), 'near'] = True
+    df.loc[(df.latitude == int_lat) | (df.longitude == int_long), 'near'] = True
 
     return df.near
 
@@ -62,7 +63,7 @@ def get_distance(df, coord):
     """
     df = df.copy()
     df['distance'] = np.nan
-    df.loc[df.near, 'distance'] = df.loc[df.near, ['business_latitude', 'business_longitude']].\
+    df.loc[df.near, 'distance'] = df.loc[df.near, ['latitude', 'longitude']].\
         apply(lambda x: distance.distance((x[0], x[1]), coord).km, axis=1)
     return df.distance
 
@@ -119,7 +120,7 @@ def get_cosine_similarity(vec1, vec2):
 def get_similar_business(coordinates=None,
                          location_str=None,
                          attributes=None,
-                         df=None,
+                         path=None,
                          threshold=10.0):
     """
     Get the nearest business based on location
@@ -130,12 +131,13 @@ def get_similar_business(coordinates=None,
         coordinates: tuple(floats)
         location: str
         attributes: str/comma-delimited
+        path: path to data file
         threshold: float
 
     Output:
         best_businesses: List of business_ids
     """
-    df = df.copy()
+    # df = df.copy()
     user_attributes = attributes.split(',')
     user_attributes = [i.lower() for i in user_attributes]
     if location_str:
@@ -145,25 +147,32 @@ def get_similar_business(coordinates=None,
         raise ValueError("provide at least one of location/coordinates")
 
     # get the near flag
-    df['near'] = filter_df(df, coordinates)
+    lat_deg = int(coordinates[0])
+    long_deg = int(coordinates[1])
+
+    df = read_business_file(path, lat_deg, long_deg)
+    # df['near'] = filter_df(df, coordinates)
+    df['latitude'] = pd.to_numeric(df['latitude'])
+    df['longitude'] = pd.to_numeric(df['longitude'])
+    df['longitude_int'] = pd.to_numeric(df['longitude_int'], downcast='integer')
+    df['latitude_int'] = pd.to_numeric(df['latitude_int'], downcast='integer')
+
     df['distance'] = get_distance(df, coordinates)
     # get the nearest businesses
     df['business_nearby'] = df.distance <= threshold
-    # only the distance condition is checked
     if sum(~df.business_nearby) == len(df):
         raise ValueError(f"No business found within {threshold}kms. Try increasing distance or try new locations")
 
     # filter restaurants on attributes
     df['final_match'] = False
-    df.business_categories = df.business_categories.str.lower()
-    # distinct attributes of businesses of our interest (business_nearby is True)
-    all_attributes = set(df.loc[df.business_nearby, 'business_categories'].str.split(', ', expand=True).stack())
+    df.categories = df.categories.str.lower()
+    all_attributes = set(df.loc[df.business_nearby, 'categories'].str.split(', ', expand=True).stack())
     attribute_match = sum([atr in user_attributes for atr in all_attributes])
 
     # case when user attributes match one of business attributes
     if attribute_match:
         logging.info("Attributes match found in nearby businesses")
-        df.loc[df.business_nearby, 'final_match'] = df.loc[df.business_nearby, 'business_categories'].\
+        df.loc[df.business_nearby, 'final_match'] = df.loc[df.business_nearby, 'categories'].\
             str.contains("|".join(all_attributes))
     # user provided attributes do not match with businesses
     else:
@@ -175,7 +184,7 @@ def get_similar_business(coordinates=None,
                 similar_attr.extend(item)
             similar_attr = set(similar_attr)
             logging.debug(f"Similar attributes based on similarity match {similar_attr}")
-            df.loc[df.business_nearby, 'final_match'] = df.loc[df.business_nearby, 'business_categories'].\
+            df.loc[df.business_nearby, 'final_match'] = df.loc[df.business_nearby, 'categories'].\
                 str.contains("|".join(similar_attr))
 
     # we have a final_match variable
