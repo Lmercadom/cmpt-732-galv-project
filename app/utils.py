@@ -1,7 +1,9 @@
 import logging
 import sys
+import os
 
 import numpy as np
+import pandas as pd
 
 
 def create_logger(consolelevel=logging.INFO):
@@ -41,3 +43,34 @@ def get_word_vec(attributes):
                 embeddings_index[word] = coefs
 
     return embeddings_index
+
+def read_business_file(path, lat_deg, long_deg):
+    """
+    read the business data file. The idea is to read only
+    those businesses that have the same degree of lat or
+    long.
+    :param path: str: path to data file
+    :param lat_deg: user lat in deg
+    :param long_deg: user long in deg
+    :return: pd.DataFrame
+    """
+    records = []
+    files = os.listdir(path)
+    files = [file for file in files if file.endswith(".csv")]
+    logging.info(f"Reading files: {', '.join(files)}")
+    for file in files:
+        logging.debug(f"Reading {os.path.join(path, file)}")
+        with open(os.path.join(path, file), 'r') as f:
+            for i, line in enumerate(f.readlines()):
+                if i == 0:
+                    headers = line.strip().split("^")
+                    continue
+                coords = line.split("^")[5:7]
+                coords = [int(coord) for coord in coords]
+                if lat_deg in coords or long_deg in coords:
+                    # lat/long deg match read the record
+                    records.append(line.split("^"))
+    df = pd.DataFrame(records, columns=headers)
+    # add near flag for downstream compatibility
+    df['near'] = True
+    return df

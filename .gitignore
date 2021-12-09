@@ -3,3 +3,8 @@ output/*
 *.pyc
 data
 jar_files
+
+# vishakha
+app/glove*
+app/*.csv
+.idea
