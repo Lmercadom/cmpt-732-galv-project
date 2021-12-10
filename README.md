@@ -18,12 +18,12 @@ spark-submit business-etl.py {downloaded-yelp-dataset}/yelp-business.json.gz bus
 spark-submit diet-restrictions-etl.py ./output/attributes.parquet output
 spark-submit tableau_diet_restriction.py ./output/DietaryRestrictions.json ./output/restaurants.parquet output/diet
 spark-submit tableau_attributes.py ./output/attributes.parquet ./output/restaurants.parquet output/restaurant-facilities
-# CSV files stored in output/diet and output/restaurant-facelities directories are further used in the Tableau Workbook
+# CSV files stored in output/diet and output/restaurant-facilities directories are further used in the Tableau Workbook
 ```
 
 **ML**
 
-With the below code we want the model to learn how the facelities of a restaurant affect its ratings. We feed 15 attributes/features to the model and predict the rating against the ratings provided by Yelp. This could be used to predict the initial ratings of a new restaurant based on the facelities it provides. In this model, we find out that features like `WheelchairAccessible` , `DogsAllowed` are given more weightage while predicting the rating. We get an accuracy of ~82%.
+With the below code we want the model to learn how the facilities of a restaurant affect its ratings. We feed 15 attributes/features to the model and predict the rating against the ratings provided by Yelp. This could be used to predict the initial ratings of a new restaurant based on the facilities it provides. In this model, we find out that features like `WheelchairAccessible` , `DogsAllowed` are given more weightage while predicting the rating. We get an accuracy of ~82%.
 ```
 spark-submit ml.py ./output/attributes.parquet output
 ```
@@ -35,7 +35,7 @@ spark-submit test-model.py ./output/model ./output/test-set
 
 **Tableau**
 
-The Tableau Workbook is already connected to the CSV files that were created during the above ETL steps. Dietary Restriction Dashboard gives the number of restaurants that offer food for people with dietary restrictions such as gluten allergy, lactose intolerance etc. and also plots their location on a map. Restaurant Facelities Dashboard shows for each state, the total number of restaurants available for various kinds of services. This can further be drilled down for each city.
+The Tableau Workbook is already connected to the CSV files that were created during the above ETL steps. Dietary Restriction Dashboard gives the number of restaurants that offer food for people with dietary restrictions such as gluten allergy, lactose intolerance etc. and also plots their location on a map. Restaurant Facilities Dashboard shows for each state, the total number of restaurants available for various kinds of services. This can further be drilled down for each city.
 
 <img align=center width="900" alt="Dietary Restrictions" src="https://user-images.githubusercontent.com/24526992/145533791-83ba2f08-2a1c-452d-a14a-20eb288cf2c9.png">
 
