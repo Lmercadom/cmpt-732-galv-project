@@ -40,3 +40,21 @@ The Tableau Workbook is already connected to the CSV files that were created dur
 <img align=center width="900" alt="Dietary Restrictions" src="https://user-images.githubusercontent.com/24526992/145533791-83ba2f08-2a1c-452d-a14a-20eb288cf2c9.png">
 
 <img align=center width="900" alt="Restaurant Facelities" src="https://user-images.githubusercontent.com/24526992/145534040-a4e847a4-00be-4b20-a4f4-af675a15ff35.png">
+
+# Similar Business Search CLI App
+
+An app that let's you look up similar businesses based on "categories" column in business.json data file. Once similar businesses are found it quickly plots them on a map for the user to view it. Head to the `app` folder for more details.
+
+![When you search for Pizza in Vancouver](app/sample_output.png "Demo output")
+
+## Usage
+```bash
+python app/main.py --path "data" --location_str "vancouver" --attributes "pizza" --threshold "15.0"
+```
+
+## Helps you find your next business opportunity
+When a user is undecided on what restaurant/cuisine to open for a business opportunity this app can help you decide that. Just look up "Sushi" in Vancouver around 15kms and it will show all businesses that have 'sushi' or a category or find similar business category if 'sushi' is not available 
+
+## Smart business look up
+What if given category is not available in data? 
+Fret not, the app uses [GloVe](https://nlp.stanford.edu/projects/glove/) embeddings to first map user provided attribute to an embedding and then it uses [cosine similarity](https://en.wikipedia.org/wiki/Cosine_similarity#Definition) to find most similar businesses in case the user provided attribute/category is not available in categories column.
