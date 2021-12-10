@@ -3,3 +3,7 @@ awscli
 pyspark
 geopy
 plotly
+afinn==0.1
+langdetect==1.0.9
+nltk==3.6.5
+spark-nlp==3.3.4

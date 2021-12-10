@@ -3,6 +3,8 @@ output/*
 *.pyc
 data
 jar_files
+images
+others
 
 # vishakha
 app/glove*

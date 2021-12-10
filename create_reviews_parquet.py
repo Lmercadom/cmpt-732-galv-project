@@ -18,8 +18,6 @@ def main(business_file, reviews_file, outdir):
     ])
 
     # Read business ids from business table
-    #TODO: Change code for connecting from S3
-    # business_ids= spark.read.parquet('s3://galv/restaurants.parquet/').select('business_id')
     business_ids= spark.read.parquet(business_file).select('business_id')
     # Read reviews json
     all_reviews = spark.read.json(reviews_file, schema=reviews_schema).repartition(16)
@@ -28,9 +26,6 @@ def main(business_file, reviews_file, outdir):
     filtered_reviews = filtered_reviews.select('review_id', 'user_id', 'business_id', 'stars', 'useful', functions.col('text').alias('contents'), 'date')
 
     filtered_reviews.write.mode("overwrite").parquet(outdir + '/reviews.parquet')
-
-    # TODO: change when common file access in found
-    # utils.upload_files_to_s3(output, BUCKET)
 
 
 if __name__ == '__main__':
