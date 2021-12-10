@@ -1,8 +1,25 @@
 from pyspark.sql import SparkSession, functions, types
 import sys
+
 assert sys.version_info >= (3, 5)  # make sure we have Python 3.5+
 
 # add more functions as necessary
+
+city_mapping = {'%westm%': 'New Westminster', 'Altamonte Springs%': 'Altamonte Springs', 'Atlanta%': 'Atlanta', 'Austin%': 'Austin', 'Beaverton%': 'Beaverton', 'Bee%': 'Bee Cave', 'Berkshire%': 'Berkshire', 'Boston%': 'Boston', 'Brookline%': 'Brookline Village', 'Champions%': 'Champions Gate', 'Clark%': 'Clarkston', 'College%': 'College Park', 'De bary': 'DeBary', 'Dorchester%': 'Dorchester', 'Grandview%': 'Grandview', 'Grove Port%': 'Groveport', 'Hapevile': 'Hapeville', 'Hiliard': 'Hilliard', 'Holb%': 'Holbrook', 'Jeffries Point%': 'Jeffries Point',
+                'Kissim%': 'Kissimmee', 'Lake Buena Visa': 'Lake Buena Vista', 'Marlbehead': 'Marblehead', 'Milwaukee': 'Milwaukie', 'Needham%': 'Needham', 'Newton Cent%': 'Newton Centre', 'N%Vancouver%': 'North Vancouver', 'Orlan%': 'Orlando', 'Port%John': 'Port St. John', 'Portland%': 'Portland', 'Quincy%': 'Quincy', 'Roxbury%': 'Roxbury', 'Saint%Cloud': 'Saint Cloud', 'Sandy Spring%': 'Sandy Springs', 'Sanford%': 'Sanford', 'Sommerville': 'Somerville', 'So%Weymouth': 'South Weymouth', 'St%loud': 'St. Cloud', 'Wellesley%': 'Wellesley', 'Winter%park': 'Winter Park'}
+
+
+def generate_city_case_statement():
+    replacement_string = ""
+    for items in city_mapping.keys():
+        replacement_string += "WHEN city LIKE '" + \
+            items + "' THEN '" + city_mapping[items] + "' "
+    return f"""
+        CASE
+            {replacement_string}
+            ELSE initcap(city)
+        END
+    """
 
 
 def main(inputs, keyspace, table):
@@ -16,12 +33,12 @@ def main(inputs, keyspace, table):
         "select business_id, trim(col4) as categories from TEMP")
 
     business_df = spark.sql(
-        """select business_id,
+        f"""select business_id,
           name,
           address,
           latitude,
           longitude,
-          city,
+          {generate_city_case_statement()} as city,
           state,
           stars,
           review_count,
@@ -47,11 +64,27 @@ def main(inputs, keyspace, table):
                                     Categories.categories like '%Cafe%'
                                """)
 
+    attributes_df = spark.sql("""
+                               select Original.business_id,
+                               attributes.*
+                               from Original
+                               where Original.business_id in (select distinct Restaurants.business_id from Restaurants) 
+                               """)
+    hours_df = spark.sql("""
+                               select Original.business_id,
+                               hours.*
+                               from Original 
+                               where Original.business_id in (select distinct Restaurants.business_id from Restaurants) 
+                               """)
+
     categories_df = categories_df.repartition(16)
     business_df = business_df.repartition(16)
     restaurants_df = restaurants_df.repartition(16)
+    attributes_df = attributes_df.repartition(16)
+    hours_df = hours_df.repartition(16)
 
-    (businessTable, categoriesTable, restaurantsTable) = table.split(',')
+    (businessTable, categoriesTable, restaurantsTable,
+     attributesTable, hoursTable) = table.split(',')
 
     business_df.write.mode("overwrite").parquet(
         f"output/{businessTable}.parquet")
@@ -59,6 +92,10 @@ def main(inputs, keyspace, table):
         f"output/{categoriesTable}.parquet")
     restaurants_df.write.mode("overwrite").parquet(
         f"output/{restaurantsTable}.parquet")
+    attributes_df.write.mode("overwrite").parquet(
+        f"output/{attributesTable}.parquet")
+    hours_df.write.mode("overwrite").parquet(
+        f"output/{hoursTable}.parquet")
 
 
 if __name__ == '__main__':
