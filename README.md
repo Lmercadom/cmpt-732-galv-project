@@ -12,7 +12,7 @@ pip3 install -r requirements.txt
 
 **ETL Steps**
 
-This step will clean, extract and transform the relevant fields from the yelp-business json for the purpose of visualization in Tableau and used to feed data to similar business search CLI App . The below code writes the results in the `output` folder
+This step will clean, extract and transform the relevant fields from the yelp-business json for the purpose of visualization in Tableau and use to feed data to "similar business search CLI" App . The below code writes the results in the `output` folder
 ```
 spark-submit business-etl.py {downloaded-yelp-dataset}/yelp_academic_dataset_business.json.gz businesses,categories,restaurants,attributes,hours
 spark-submit diet-restrictions-etl.py ./output/attributes.parquet output
