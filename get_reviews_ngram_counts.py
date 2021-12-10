@@ -16,8 +16,10 @@ from sparknlp.base import DocumentAssembler, Finisher
 from sparknlp.annotator import Tokenizer, Normalizer, LemmatizerModel, StopWordsCleaner, NGramGenerator
 from pyspark.ml import Pipeline
 
+
 af = Afinn()
 
+nltk.download('stopwords')
 stop_words = stopwords.words('english')
 
 def convert_rating(rating):
