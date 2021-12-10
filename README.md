@@ -48,6 +48,9 @@ An app that let's you look up similar businesses based on "categories" column in
 ![When you search for Pizza in Vancouver](app/sample_output.png "Demo output")
 
 ## Usage
+
+Download [GloVe Embeddings](https://nlp.stanford.edu/data/glove.6B.zip), store and extract in the same app folder. Then run:
+
 ```bash
 python app/main.py --path "data" --location_str "vancouver" --attributes "pizza" --threshold "15.0"
 ```
