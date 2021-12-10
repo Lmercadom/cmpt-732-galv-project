@@ -99,14 +99,16 @@ spark-submit --packages com.johnsnowlabs.nlp:spark-nlp_2.12:3.3.4 get_reviews_ng
 
 ```
 
-**Tableu:**
+**Tableu Visualization:**
 
-Histogram of ngram count of the top 5 pizza restaurants with more than 100 reviews.
-They are classified the following way:
-- ngrams coming from positive reviews, but found positive sentiment sentences.
-- ngrams coming from positive reviews, but found in negative sentiment sentences.
-- ngrams coming from positive reviews, but found in neutral sentiment sentences.
+Histogram of ngram count of the top 5 pizza restaurants with more than 100 reviews grouped by review (positive or negative) and sentiment (positive, negative or neutral)
 
-- ngrams coming from negative reviews, positive sentiment sentences.
-- ngrams coming from negative reviews, negative sentiment sentences.
-- ngrams coming from negative reviews, neutral sentiment sentences.
+<img width="450" alt="reviews_count_pos_pos" src="https://user-images.githubusercontent.com/42242797/145650202-62c5cca3-327b-4bb0-bc26-d5e52fbde262.png"> | <img width="450" alt="reviews_count_pos_neg" src="https://user-images.githubusercontent.com/42242797/145650158-322e3e3f-5ad8-4b7f-8a3a-31a07f568cac.png">
+
+
+<img width="450" alt="reviews_count_neg_neg" src="https://user-images.githubusercontent.com/42242797/145650143-05adf18c-ab4b-4bbd-a521-c1370ebc8586.png"> | <img width="450" alt="reviews_count_neg_pos" src="https://user-images.githubusercontent.com/42242797/145650819-538edfcd-0221-41ad-8d69-ec5dc8bd5a67.png">
+
+
+
+
+
