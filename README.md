@@ -53,10 +53,14 @@ An app that let's you look up similar businesses based on "categories" column in
 
 ## Usage
 
-Download [GloVe Embeddings](https://nlp.stanford.edu/data/glove.6B.zip), store and extract in the same app folder. Then run:
+Below code will download GloVe Embeddings and run spark job
 
 ```bash
-python app/main.py --path "data" --location_str "vancouver" --attributes "pizza" --threshold "15.0"
+cd app
+wget https://nlp.stanford.edu/data/glove.6B.zip
+unzip glove.6B.zip
+
+python3 main.py --path "data" --location_str "vancouver" --attributes "pizza" --threshold "15.0"
 ```
 
 ## Helps you find your next business opportunity
