@@ -1,3 +1,5 @@
 boto3
 awscli
 pyspark
+geopy
+plotly
