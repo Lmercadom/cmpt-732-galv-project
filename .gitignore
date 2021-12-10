@@ -3,3 +3,10 @@ output/*
 *.pyc
 data
 jar_files
+
+# vishakha
+app/glove*
+app/*.csv
+app/.mapbox_token
+.idea
+/app/tmp
