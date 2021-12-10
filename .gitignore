@@ -3,3 +3,4 @@ output/*
 *.pyc
 data
 jar_files
+images
