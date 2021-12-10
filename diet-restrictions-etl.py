@@ -26,9 +26,7 @@ def main(inputs, output):
     # df.rdd.map()
     df = df.select('business_id', functions.explode(
         explode(df['DietaryRestrictions'])).alias('DietaryRestrictions'))
-    df = df.coalesce(1).cache()
     df.write.json(output+"/DietaryRestrictions.json", mode="overwrite")
-    df.write.csv(output+"/DietaryRestrictions.csv", mode="overwrite")
 
 
 if __name__ == '__main__':
