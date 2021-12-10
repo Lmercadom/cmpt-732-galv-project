@@ -4,6 +4,7 @@ import sys
 assert sys.version_info >= (3, 5)  # make sure we have Python 3.5+
 
 # add more functions as necessary
+#BUCKET = 'galv'
 
 city_mapping = {'%westm%': 'New Westminster', 'Altamonte Springs%': 'Altamonte Springs', 'Atlanta%': 'Atlanta', 'Austin%': 'Austin', 'Beaverton%': 'Beaverton', 'Bee%': 'Bee Cave', 'Berkshire%': 'Berkshire', 'Boston%': 'Boston', 'Brookline%': 'Brookline Village', 'Champions%': 'Champions Gate', 'Clark%': 'Clarkston', 'College%': 'College Park', 'De bary': 'DeBary', 'Dorchester%': 'Dorchester', 'Grandview%': 'Grandview', 'Grove Port%': 'Groveport', 'Hapevile': 'Hapeville', 'Hiliard': 'Hilliard', 'Holb%': 'Holbrook', 'Jeffries Point%': 'Jeffries Point',
                 'Kissim%': 'Kissimmee', 'Lake Buena Visa': 'Lake Buena Vista', 'Marlbehead': 'Marblehead', 'Milwaukee': 'Milwaukie', 'Needham%': 'Needham', 'Newton Cent%': 'Newton Centre', 'N%Vancouver%': 'North Vancouver', 'Orlan%': 'Orlando', 'Port%John': 'Port St. John', 'Portland%': 'Portland', 'Quincy%': 'Quincy', 'Roxbury%': 'Roxbury', 'Saint%Cloud': 'Saint Cloud', 'Sandy Spring%': 'Sandy Springs', 'Sanford%': 'Sanford', 'Sommerville': 'Somerville', 'So%Weymouth': 'South Weymouth', 'St%loud': 'St. Cloud', 'Wellesley%': 'Wellesley', 'Winter%park': 'Winter Park'}
@@ -22,7 +23,7 @@ def generate_city_case_statement():
     """
 
 
-def main(inputs, keyspace, table):
+def main(inputs, table):
     # main logic starts here
     df = spark.read.json(inputs).cache()
     df.createOrReplaceTempView('Original')
@@ -97,13 +98,14 @@ def main(inputs, keyspace, table):
     hours_df.write.mode("overwrite").parquet(
         f"output/{hoursTable}.parquet")
 
+   # utils.upload_files_to_s3('output', BUCKET)
+
 
 if __name__ == '__main__':
     inputs = sys.argv[1]
-    keyspace = sys.argv[2]
-    table = sys.argv[3]
+    table = sys.argv[2]
     spark = SparkSession.builder.appName('GALV project').getOrCreate()
     assert spark.version >= '3.0'  # make sure we have Spark 3.0+
     spark.sparkContext.setLogLevel('WARN')
     sc = spark.sparkContext
-    main(inputs, keyspace, table)
+    main(inputs, table)
