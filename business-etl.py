@@ -48,7 +48,7 @@ def main(inputs, table):
     business_df.createOrReplaceTempView('Business')
     categories_df.createOrReplaceTempView('Categories')
     restaurants_df = spark.sql("""
-                               select Business.business_id,
+                               select distinct Business.business_id,
                                 name,
                                 address,
                                 latitude,
@@ -63,6 +63,19 @@ def main(inputs, table):
                                on Categories.business_id = Business.business_id 
                                where Categories.categories like '%Restaurants' or   
                                     Categories.categories like '%Cafe%'
+                               """)
+    categories_df.createOrReplaceTempView('Restaurants')
+    attributes_df = spark.sql("""
+                               select Original.business_id,
+                               attributes.*
+                               from Original
+                               where Original.business_id in (select distinct Restaurants.business_id from Restaurants) 
+                               """)
+    hours_df = spark.sql("""
+                               select Original.business_id,
+                               hours.*
+                               from Original 
+                               where Original.business_id in (select distinct Restaurants.business_id from Restaurants) 
                                """)
 
     attributes_df = spark.sql("""
