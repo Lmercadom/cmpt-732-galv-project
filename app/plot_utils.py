@@ -1,3 +1,7 @@
+#
+# author: vva12 Vishakha
+#
+
 import logging
 import plotly.graph_objects as go
 
@@ -10,12 +14,17 @@ def show_recomm(df):
     with open('.mapbox_token', 'r') as f:
         mapbox_access_token = f.read()
 
-    # filter number of suggestions to 100.
-    if len(df) > 100:
-        logging.debug(f"Filtering out top 100 records by distance")
+    # filter number of suggestions to 200.
+    if len(df) > 200:
+        logging.debug(f"Filtering out top 200 records by distance")
         df = df.sort_values(by='distance', ascending=True)
-        df = df.iloc[:100,:]
+        df = df.iloc[:200,:]
 
+    bid_dict = {}
+    for bid in df.business_id.tolist():
+        bid_dict[bid] = df.loc[df.business_id == bid, 'name'].values[0]
+
+    logging.debug(f"{bid_dict}")
     # TODO 1. plot additional atributes
     # TODO 2. show selected location on plot as a different marker
     fig = go.Figure(go.Scattermapbox(

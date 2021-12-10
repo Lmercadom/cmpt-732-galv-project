@@ -1,3 +1,7 @@
+#
+# author: vva12 Vishakha
+#
+
 import argparse
 import logging
 
@@ -7,11 +11,11 @@ import utils
 if __name__ == '__main__':
     # TODO remove defaults
     parser = argparse.ArgumentParser()
-    parser.add_argument("--path", help="path to file", default="")
+    parser.add_argument("--path", help="path to file", default="data")
     parser.add_argument("--coordinates", help="coordinates as tuple of floats", default=None)
-    parser.add_argument("--location_str", help="location as string", default="columbus")
-    parser.add_argument("--attributes", help="cuisine types sepearated by ','", default="dosa")
-    parser.add_argument("--threshold", help="distance from your location", default=10.0)
+    parser.add_argument("--location_str", help="location as string", default="vancouver")
+    parser.add_argument("--attributes", help="cuisine types sepearated by ','", default="pizza")
+    parser.add_argument("--threshold", help="distance from your location", default=15.0)
     args = parser.parse_args()
 
     logger = utils.create_logger(logging.DEBUG)

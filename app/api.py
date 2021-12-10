@@ -1,3 +1,6 @@
+#
+# author: vva12 Vishakha
+#
 
 import sys
 import logging
@@ -70,7 +73,8 @@ def get_distance(df, coord):
 
 def get_similar_attributes(user_attributes, all_attributes):
     """
-
+    loop over user_attr available in glove word embeddings and get top 5
+    similar businesses with least cosine distance
     :param user_attributes: user_attributes list
     :param all_attributes: all_attributes set
     :return: dict with user_attributes as keys and similar attributes from all_attributes as list of values
@@ -173,7 +177,7 @@ def get_similar_business(coordinates=None,
     if attribute_match:
         logging.info("Attributes match found in nearby businesses")
         df.loc[df.business_nearby, 'final_match'] = df.loc[df.business_nearby, 'categories'].\
-            str.contains("|".join(all_attributes))
+            str.contains("|".join(user_attributes))
     # user provided attributes do not match with businesses
     else:
         logging.info("Attributes match not found in nearby businesses")
@@ -182,8 +186,9 @@ def get_similar_business(coordinates=None,
             similar_attr = []
             for item in user_attributes_similar.values():
                 similar_attr.extend(item)
-            similar_attr = set(similar_attr)
+
             logging.debug(f"Similar attributes based on similarity match {similar_attr}")
+            similar_attr = set(similar_attr)
             df.loc[df.business_nearby, 'final_match'] = df.loc[df.business_nearby, 'categories'].\
                 str.contains("|".join(similar_attr))
 
