@@ -89,7 +89,7 @@ spark-submit --packages com.johnsnowlabs.nlp:spark-nlp_2.12:3.3.4 get_reviews_ng
 
 inputs:
 <reviews file> : parquet file of reviews
-<business ids> : txt file with list of businesses ids to perform review mining on.
+<business ids> : txt file with list of businesses ids to perform review mining on. Should be in local not hdfs
 <ngram> : length of ngram
 <output> : output folder
 
@@ -114,8 +114,3 @@ Histogram of ngram count of the top 5 pizza restaurants with more than 100 revie
 
 
 <img width="450" alt="reviews_count_neg_neg" src="https://user-images.githubusercontent.com/42242797/145650143-05adf18c-ab4b-4bbd-a521-c1370ebc8586.png"> | <img width="450" alt="reviews_count_neg_pos" src="https://user-images.githubusercontent.com/42242797/145650819-538edfcd-0221-41ad-8d69-ec5dc8bd5a67.png">
-
-
-
-
-
