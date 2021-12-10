@@ -12,13 +12,17 @@ pip3 install -r requirements.txt
 
 **ETL Steps**
 
-This step will clean, extract and transform the relevant fields from the yelp-business json for the purpose of visualization in Tableau. The below code writes the results in the `output` folder
+This step will clean, extract and transform the relevant fields from the yelp-business json for the purpose of visualization in Tableau and . The below code writes the results in the `output` folder
 ```
 spark-submit business-etl.py {downloaded-yelp-dataset}/yelp-business.json.gz businesses,categories,restaurants,attributes,hours
 spark-submit diet-restrictions-etl.py ./output/attributes.parquet output
 spark-submit tableau_diet_restriction.py ./output/DietaryRestrictions.json ./output/restaurants.parquet output/diet
 spark-submit tableau_attributes.py ./output/attributes.parquet ./output/restaurants.parquet output/restaurant-facilities
+spark-submit user_data_ingestion.py {downloaded-yelp-dataset}/yelp_academic_dataset_user.json ./output/user
+spark-submit business_data_filter.py {downloaded-yelp-dataset}/yelp_academic_dataset_business.json ./output/restaurants.parquet ./output/data
+
 # CSV files stored in output/diet and output/restaurant-facilities directories are further used in the Tableau Workbook
+# CSV files stored in output/data is further used to feed data for similar business search CLI App.
 ```
 
 **ML**
