@@ -12,9 +12,9 @@ pip3 install -r requirements.txt
 
 **ETL Steps**
 
-This step will clean, extract and transform the relevant fields from the yelp-business json for the purpose of visualization in Tableau and . The below code writes the results in the `output` folder
+This step will clean, extract and transform the relevant fields from the yelp-business json for the purpose of visualization in Tableau and used to feed data to similar business search CLI App . The below code writes the results in the `output` folder
 ```
-spark-submit business-etl.py {downloaded-yelp-dataset}/yelp-business.json.gz businesses,categories,restaurants,attributes,hours
+spark-submit business-etl.py {downloaded-yelp-dataset}/yelp_academic_dataset_business.json.gz businesses,categories,restaurants,attributes,hours
 spark-submit diet-restrictions-etl.py ./output/attributes.parquet output
 spark-submit tableau_diet_restriction.py ./output/DietaryRestrictions.json ./output/restaurants.parquet output/diet
 spark-submit tableau_attributes.py ./output/attributes.parquet ./output/restaurants.parquet output/restaurant-facilities
@@ -29,7 +29,7 @@ spark-submit business_data_filter.py {downloaded-yelp-dataset}/yelp_academic_dat
 
 With the below code we want the model to learn how the facilities of a restaurant affect its ratings. We feed 15 attributes/features to the model and predict the rating against the ratings provided by Yelp. This could be used to predict the initial ratings of a new restaurant based on the facilities it provides. In this model, we find out that features like `WheelchairAccessible` , `DogsAllowed` are given more weightage while predicting the rating. We get an accuracy of ~82%.
 ```
-spark-submit ml.py ./output/attributes.parquet output
+spark-submit ml.py ./output/restaurants.parquet,./output/attributes.parquet output
 ```
 
 [Optional] as the above command already prints the test results. Once the training is done you can test the saved model on the test set using the below command. 
