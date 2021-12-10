@@ -16,7 +16,7 @@ def main(inputs,rest_input, output):
     df_restaurants.cache()
     #rest_input is input file ingested to filter the business as restaurant.
 
-    df_rest = df_restraunts.withColumnRenamed("business_id", "rest_id").withColumnRenamed("name", "name_rest")\
+    df_rest = df_restaurants.withColumnRenamed("business_id", "rest_id").withColumnRenamed("name", "name_rest")\
             .withColumnRenamed("latitude", "latitude_rest").withColumnRenamed("longitude", "longitude_rest")
 
     df_join = df_filter.join(df_rest, df_rest.rest_id == df_filter.business_id, "inner")
