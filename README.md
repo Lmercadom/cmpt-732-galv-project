@@ -39,7 +39,7 @@ The Tableau Workbook is already connected to the CSV files that were created dur
 
 <img align=center width="900" alt="Dietary Restrictions" src="https://user-images.githubusercontent.com/24526992/145533791-83ba2f08-2a1c-452d-a14a-20eb288cf2c9.png">
 
-<img align=center width="900" alt="Restaurant Facelities" src="https://user-images.githubusercontent.com/24526992/145534040-a4e847a4-00be-4b20-a4f4-af675a15ff35.png">
+<img align=center width="900" alt="Restaurant Facilities" src="https://user-images.githubusercontent.com/24526992/145549977-0f2bb8e4-2660-4e5c-abdf-dce8b6febcec.png">
 
 # Similar Business Search CLI App
 
