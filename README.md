@@ -1,38 +1,13 @@
 # Helping newly aspiring restaurant owners to navigate the restaurant space using the Yelp Dataset. 
 The aim of the project is to provide valuable insights to aspiring restaurant owners to set up their restaurant in such a way that it increases their probability of success. This is based on three key pieces of information: the most influential features that determine high restaurant ratings, location distribution of their competitors, and customers' experiences of those through review sentiment mining.
 
-# Set up
-
-- Clone repository
-- Install dependencies
-
-```
-pip3 install -r requirements.txt
-```
-
-- Download yelp dataset from here [Yelp Dataset](https://www.yelp.com/dataset/download)
-- Download Tableau Reader from here [Tableau Reader](https://www.tableau.com/products/reader)
+# Code Set up
 
 Guide to setup and run the code can be found here [RUNNING.md](https://github.com/Lmercadom/cmpt-732-galv-project/edit/main/RUNNING.md)
+
 # Gathering the most influential features
 
-**ETL Steps**
-
-This step will clean, extract and transform the relevant fields from the yelp-business json for the purpose of visualization in Tableau and use to feed data to "similar business search CLI" App . The below code writes the results in the `output` folder
-```
-spark-submit business-etl.py {downloaded-yelp-dataset}/yelp_academic_dataset_business.json
-businesses,categories,restaurants,attributes,hours
-spark-submit diet-restrictions-etl.py ./output/attributes.parquet output
-spark-submit tableau_diet_restriction.py ./output/DietaryRestrictions.json ./output/restaurants.parquet output/diet
-spark-submit tableau_attributes.py ./output/attributes.parquet ./output/restaurants.parquet output/restaurant-facilities
-spark-submit user_data_ingestion.py {downloaded-yelp-dataset}/yelp_academic_dataset_user.json ./output/user
-spark-submit business_data_filter.py {downloaded-yelp-dataset}/yelp_academic_dataset_business.json ./output/restaurants.parquet ./output/data
-
-# CSV files stored in output/diet and output/restaurant-facilities directories are further used in the Tableau Workbook
-# CSV files stored in output/data is further used to feed data for similar business search CLI App.
-```
-
-**ML**
+## ML
 
 With the below code we want the model to learn how the facilities of a restaurant affect its ratings. We feed 15 attributes/features to the model and predict the rating against the ratings provided by Yelp. This could be used to predict the initial ratings of a new restaurant based on the facilities it provides. In this model, we find out that features like `WheelchairAccessible` , `DogsAllowed` are given more weightage while predicting the rating. We get an accuracy of ~82%.
 ```
@@ -44,7 +19,7 @@ spark-submit ml.py ./output/restaurants.parquet,./output/attributes.parquet outp
 spark-submit test-model.py ./output/model ./output/test-set
 ```
 
-**Tableau**
+## Tableau Visualization
 
 The Tableau Workbook is already connected to the CSV files that were created during the above ETL steps. Dietary Restriction Dashboard gives the number of restaurants that offer food for people with dietary restrictions such as gluten allergy, lactose intolerance etc. and also plots their location on a map. Restaurant Facilities Dashboard shows for each state, the total number of restaurants available for various kinds of services. This can further be drilled down for each city.
 
@@ -58,22 +33,13 @@ An app that let's you look up similar businesses based on "categories" column in
 
 ![When you search for Pizza in Vancouver](app/sample_output.png "Demo output")
 
-## Usage
-
-Below code will download GloVe Embeddings and run spark job
-
-```bash
-cd app
-wget https://nlp.stanford.edu/data/glove.6B.zip
-unzip glove.6B.zip
-
-python3 main.py --path "data" --location_str "vancouver" --attributes "pizza" --threshold "15.0"
-```
 
 ## Helps you find your next business opportunity
-When a user is undecided on what restaurant/cuisine to open for a business opportunity this app can help you decide that. Just look up "Sushi" in Vancouver around 15kms and it will show all businesses that have 'sushi' or a category or find similar business category if 'sushi' is not available
+
+When a user is undecided on what restaurant/cuisine to open for a business opportunity this app can help you decide that. Just look up "Sushi" in Vancouver around 15kms and it will show all businesses that have 'sushi' or find similar business category if 'sushi' is not available.
 
 ## Smart business look up
+
 What if given category is not available in data?
 Fret not, the app uses [GloVe](https://nlp.stanford.edu/projects/glove/) embeddings to first map user provided attribute to an embedding and then it uses [cosine similarity](https://en.wikipedia.org/wiki/Cosine_similarity#Definition) to find most similar businesses in case the user provided attribute/category is not available in categories column.
 
@@ -81,50 +47,15 @@ Fret not, the app uses [GloVe](https://nlp.stanford.edu/projects/glove/) embeddi
 
 These steps will let you get a table count of the most used ngrams across positive and negative reviews and positive, and negative, and neutral sentence sentiments for a list of restaurants.
 
-## Getting reviews for all restaurants
-
-Filters the yelp review dataset for restaurants only and eliminates non relevant columns.
-```
-spark-submit create_reviews_parquet.py output/restaurants.parquet {downloaded-yelp-dataset}/yelp_academic_dataset_reviews.json
-output
-```
 
 ## Mining reviews for specific restaurants
 
 This command generates a table count of ngrams and the frequency they appear in the reviews grouped by restaurants,
 review rating, and sentence sentiment.
 
-**Usage:**
-
-Warning: the package **langdetect** used in this script fails to get imported in the cluster.
-When importing, It tries to find it in the global python packages, but it is installed
-in the user python package.
 
 
-
-spark-submit --packages com.johnsnowlabs.nlp:spark-nlp_2.12:3.3.4 get_reviews_ngram_counts.py `<reviews file>` `<business ids>` `<ngram>` `<output>`
-
-inputs:
-
-`<reviews file>` : parquet file of reviews
-
-`<business ids>` : txt file with list of businesses ids to perform review mining on. Should be in local not hdfs
-
-`<ngram>` : length of ngram
-
-`<output>` : output folder
-
-outputs:
-n_grams_count.csv
-
-
-**Command used in the report:**
-
-```
-spark-submit --packages com.johnsnowlabs.nlp:spark-nlp_2.12:3.3.4 get_reviews_ngram_counts.py ./output/reviews.parquet businesses_id.txt 2 output/
-```
-
-**Tableu Visualization:**
+## Tableau Visualization:
 
 Histogram of ngram count of the top 5 pizza restaurants with more than 100 reviews grouped by review (positive or negative) and sentiment (positive, negative or neutral)
 
