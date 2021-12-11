@@ -21,7 +21,7 @@ The Tableau Workbook `Yelp_Data_Analysis.twb` is already connected to the CSV fi
 
 **Restaurant Facilities Dashboard** shows for each state, the total number of restaurants available for various kinds of services. This can further be drilled down for each city.
 
-<img align=center width="900" alt="Dietary Restrictions" src="https://user-images.githubusercontent.com/24526992/145533791-83ba2f08-2a1c-452d-a14a-20eb288cf2c9.png">
+<img align=center width="900" alt="Dietary Restrictions" src="https://user-images.githubusercontent.com/24526992/145658875-abc6e17b-8237-40cc-acc9-6fcf6252f319.png">
 
 <img align=center width="900" alt="Restaurant Facilities" src="https://user-images.githubusercontent.com/24526992/145549977-0f2bb8e4-2660-4e5c-abdf-dce8b6febcec.png">
 
