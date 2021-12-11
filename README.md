@@ -10,18 +10,16 @@ Guide to setup and run the code can be found here [RUNNING.md](https://github.co
 ## ML
 
 With the below code we want the model to learn how the facilities of a restaurant affect its ratings. We feed 15 attributes/features to the model and predict the rating against the ratings provided by Yelp. This could be used to predict the initial ratings of a new restaurant based on the facilities it provides. In this model, we find out that features like `WheelchairAccessible` , `DogsAllowed` are given more weightage while predicting the rating. We get an accuracy of ~82%.
-```
-spark-submit ml.py ./output/restaurants.parquet,./output/attributes.parquet output
-```
 
-[Optional] as the above command already prints the test results. Once the training is done you can test the saved model on the test set using the below command.
-```
-spark-submit test-model.py ./output/model ./output/test-set
-```
+[view command](https://github.com/Lmercadom/cmpt-732-galv-project/blob/main/RUNNING.md#ml-code)
 
 ## Tableau Visualization
 
-The Tableau Workbook is already connected to the CSV files that were created during the above ETL steps. Dietary Restriction Dashboard gives the number of restaurants that offer food for people with dietary restrictions such as gluten allergy, lactose intolerance etc. and also plots their location on a map. Restaurant Facilities Dashboard shows for each state, the total number of restaurants available for various kinds of services. This can further be drilled down for each city.
+The Tableau Workbook `Yelp_Data_Analysis.twb` is already connected to the CSV files that were created during the ETL steps. 
+
+**Dietary Restriction Dashboard** gives the number of restaurants that offer food for people with dietary restrictions such as gluten allergy, lactose intolerance etc. and also plots their location on a map.
+
+**Restaurant Facilities Dashboard** shows for each state, the total number of restaurants available for various kinds of services. This can further be drilled down for each city.
 
 <img align=center width="900" alt="Dietary Restrictions" src="https://user-images.githubusercontent.com/24526992/145533791-83ba2f08-2a1c-452d-a14a-20eb288cf2c9.png">
 
@@ -43,6 +41,9 @@ When a user is undecided on what restaurant/cuisine to open for a business oppor
 What if given category is not available in data?
 Fret not, the app uses [GloVe](https://nlp.stanford.edu/projects/glove/) embeddings to first map user provided attribute to an embedding and then it uses [cosine similarity](https://en.wikipedia.org/wiki/Cosine_similarity#Definition) to find most similar businesses in case the user provided attribute/category is not available in categories column.
 
+[view command](https://github.com/Lmercadom/cmpt-732-galv-project/blob/main/RUNNING.md#similar-business-search-cli-app)
+
+
 # Reviews Sentiment Mining
 
 These steps will let you get a table count of the most used ngrams across positive and negative reviews and positive, and negative, and neutral sentence sentiments for a list of restaurants.
@@ -53,7 +54,7 @@ These steps will let you get a table count of the most used ngrams across positi
 This command generates a table count of ngrams and the frequency they appear in the reviews grouped by restaurants,
 review rating, and sentence sentiment.
 
-
+[view command](https://github.com/Lmercadom/cmpt-732-galv-project/blob/main/RUNNING.md#reviews-sentiment-mining)
 
 ## Tableau Visualization:
 
