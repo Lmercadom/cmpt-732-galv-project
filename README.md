@@ -1,4 +1,4 @@
-# Helping newly aspiring restaurant owners to navigate the restaurant space using the Yelp Dataset. 
+# Helping aspiring restaurant owners to navigate the restaurant space using the Yelp Dataset. 
 The aim of the project is to provide valuable insights to aspiring restaurant owners to set up their restaurant in such a way that it increases their probability of success. This is based on three key pieces of information: the most influential features that determine high restaurant ratings, location distribution of their competitors, and customers' experiences of those through review sentiment mining.
 
 # Code Set up
@@ -29,7 +29,7 @@ The Tableau Workbook is already connected to the CSV files that were created dur
 
 # Similar Business Search CLI App
 
-An app that let's you look up similar businesses based on "categories" column in business.json data file. Once similar businesses are found it quickly plots them on a map for the user to view it. Head to the `app` folder for more details.
+An app that let's you look up similar businesses based on "categories" column in business.json data file. Once similar businesses are found, it quickly plots them on a map for the user to view it. Head to the `app` folder for more details.
 
 ![When you search for Pizza in Vancouver](app/sample_output.png "Demo output")
 
@@ -45,19 +45,12 @@ Fret not, the app uses [GloVe](https://nlp.stanford.edu/projects/glove/) embeddi
 
 # Reviews Sentiment Mining
 
-These steps will let you get a table count of the most used ngrams across positive and negative reviews and positive, and negative, and neutral sentence sentiments for a list of restaurants.
-
-
-## Mining reviews for specific restaurants
-
-This command generates a table count of ngrams and the frequency they appear in the reviews grouped by restaurants,
-review rating, and sentence sentiment.
-
+Positive and negative reviews from top restaurants in a given region were mined to get insights about what customers of these establishments are feeling about their experience. This is determined by the frequency in which sequence of words (ngrams) appear in the reviews. A sentence sentiment based approach was used in which an overall positive, negative and neutral sentiment was assigned to each sentence using the Afinn Lexicon. This way, even when the overall review is rated as positive or negative, more information about what aspects within the review, customers felt positive, negative or neutral about. Thus, adding an additional layer of understanding.
 
 
 ## Tableau Visualization:
 
-Histogram of ngram count of the top 5 pizza restaurants with more than 100 reviews grouped by review (positive or negative) and sentiment (positive, negative or neutral)
+The frequency table of ngrams can be visualized as a histogram. Below is the visualization of the ngram count of the top 5 pizza restaurants with more than 100 reviews grouped by review (positive or negative) and sentiment (positive, negative or neutral)
 
 <img width="450" alt="reviews_count_pos_pos" src="https://user-images.githubusercontent.com/42242797/145650202-62c5cca3-327b-4bb0-bc26-d5e52fbde262.png"> | <img width="450" alt="reviews_count_pos_neg" src="https://user-images.githubusercontent.com/42242797/145650158-322e3e3f-5ad8-4b7f-8a3a-31a07f568cac.png">
 
