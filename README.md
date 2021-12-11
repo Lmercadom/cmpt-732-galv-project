@@ -3,7 +3,7 @@ The aim of the project is to provide valuable insights to aspiring restaurant ow
 
 # Code Set up
 
-Guide to setup and run the code can be found here [RUNNING.md](https://github.com/Lmercadom/cmpt-732-galv-project/edit/main/RUNNING.md)
+Guide to setup and run the code can be found here [RUNNING.md](https://github.com/Lmercadom/cmpt-732-galv-project/blob/main/RUNNING.md)
 
 # Gathering the most influential features
 
