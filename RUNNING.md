@@ -62,7 +62,7 @@ cd ..
 
 businesses_id.txt here represents the yelp business ids to perform review mining on.
 
-`Warning`: the package langdetect used in this script fails to get imported in the cluster. When importing, It tries to find it in the global python packages, but it is installed in the user python package.
+`**Warning**`: the package `langdetect` used in this script fails to get imported in the cluster. When importing, It tries to find it in the global python packages, but it is installed in the user's python package. It works fine on local machine.
 
 spark-submit --packages com.johnsnowlabs.nlp:spark-nlp_2.12:3.3.4 get_reviews_ngram_counts.py `<reviews file>` `<business ids>` `<ngram>` `<output>`
 
