@@ -41,6 +41,14 @@ spark-submit test-model.py ./output/model ./output/test-set
 
 ## **Similar Business Search CLI App** 
 
+`path` : path for filtered business data 
+
+`location_str` : where the business owner wants to open the restaurant
+
+`attributes` : the categories/cuisines user is looking for in the location provided 
+
+`threshold` : the distance in kms that user wants the app to look for businesses from the location provided
+
 ```
 cd app
 wget https://nlp.stanford.edu/data/glove.6B.zip
@@ -51,7 +59,25 @@ cd ..
 ```
 
 ## **Reviews Sentiment Mining**
+
 businesses_id.txt here represents the yelp business ids to perform review mining on.
+
+`Warning`: the package langdetect used in this script fails to get imported in the cluster. When importing, It tries to find it in the global python packages, but it is installed in the user python package.
+
+spark-submit --packages com.johnsnowlabs.nlp:spark-nlp_2.12:3.3.4 get_reviews_ngram_counts.py `<reviews file>` `<business ids>` `<ngram>` `<output>`
+
+inputs:
+
+`<reviews file>` : parquet file of reviews
+
+`<business ids>` : txt file with list of businesses ids to perform review mining on. Should be in local not hdfs
+
+`<ngram>` : length of ngram
+
+`<output>` : output folder
+
+`outputs`: n_grams_count.csv
+
 ```
 spark-submit --packages com.johnsnowlabs.nlp:spark-nlp_2.12:3.3.4 get_reviews_ngram_counts.py ./output/reviews.parquet businesses_id.txt 2 output/
 ```
