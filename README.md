@@ -13,6 +13,7 @@ pip3 install -r requirements.txt
 - Download yelp dataset from here [Yelp Dataset](https://www.yelp.com/dataset/download)
 - Download Tableau Reader from here [Tableau Reader](https://www.tableau.com/products/reader)
 
+Guide to setup and run the code can be found here [RUNNING.md](https://github.com/Lmercadom/cmpt-732-galv-project/edit/main/RUNNING.md)
 # Gathering the most influential features
 
 **ETL Steps**
