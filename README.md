@@ -14,7 +14,8 @@ pip3 install -r requirements.txt
 
 This step will clean, extract and transform the relevant fields from the yelp-business json for the purpose of visualization in Tableau and use to feed data to "similar business search CLI" App . The below code writes the results in the `output` folder
 ```
-spark-submit business-etl.py {downloaded-yelp-dataset}/yelp_academic_dataset_business.json.gz businesses,categories,restaurants,attributes,hours
+spark-submit business-etl.py {downloaded-yelp-dataset}/yelp_academic_dataset_business.json
+businesses,categories,restaurants,attributes,hours
 spark-submit diet-restrictions-etl.py ./output/attributes.parquet output
 spark-submit tableau_diet_restriction.py ./output/DietaryRestrictions.json ./output/restaurants.parquet output/diet
 spark-submit tableau_attributes.py ./output/attributes.parquet ./output/restaurants.parquet output/restaurant-facilities
@@ -78,7 +79,8 @@ These steps will let you get a table count of the most used ngrams across positi
 
 Filters the yelp review dataset for restaurants only and eliminates non relevant columns.
 ```
-spark-submit create_reviews_parquet.py output/restaurants.parquet {downloaded-yelp-dataset}/yelp-reviews.json.gz output
+spark-submit create_reviews_parquet.py output/restaurants.parquet {downloaded-yelp-dataset}/yelp_academic_dataset_reviews.json
+output
 ```
 
 ## Mining reviews for specific restaurants
@@ -93,26 +95,27 @@ When importing, It tries to find it in the global python packages, but it is ins
 in the user python package.
 
 
-```
-spark-submit --packages com.johnsnowlabs.nlp:spark-nlp_2.12:3.3.4 get_reviews_ngram_counts.py <reviews file> <business ids> <ngram> <output>
+
+spark-submit --packages com.johnsnowlabs.nlp:spark-nlp_2.12:3.3.4 get_reviews_ngram_counts.py `<reviews file>` `<business ids>` `<ngram>` `<output>`
 
 inputs:
-<reviews file> : parquet file of reviews
-<business ids> : txt file with list of businesses ids to perform review mining on. Should be in local not hdfs
-<ngram> : length of ngram
-<output> : output folder
+
+`<reviews file>` : parquet file of reviews
+
+`<business ids>` : txt file with list of businesses ids to perform review mining on. Should be in local not hdfs
+
+`<ngram>` : length of ngram
+
+`<output>` : output folder
 
 outputs:
 n_grams_count.csv
 
-```
 
 **Command used in the report:**
 
 ```
-
-spark-submit --packages com.johnsnowlabs.nlp:spark-nlp_2.12:3.3.4 get_reviews_ngram_counts.py data/reviews.parquet businesses_id.txt 2 ./data/output
-
+spark-submit --packages com.johnsnowlabs.nlp:spark-nlp_2.12:3.3.4 get_reviews_ngram_counts.py ./output/reviews.parquet businesses_id.txt 2 output/
 ```
 
 **Tableu Visualization:**
