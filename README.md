@@ -1,4 +1,7 @@
-# cmpt-732-galv-project
+# Helping newly aspiring restaurant owners to navigate the restaurant space using the Yelp Dataset. 
+The aim of the project is to provide valuable insights to aspiring restaurant owners to set up their restaurant in such a way that it increases their probability of success. This is based on three key pieces of information: the most influential features that determine high restaurant ratings, location distribution of their competitors, and customers' experiences of those through review sentiment mining.
+
+# Set up
 
 - Clone repository
 - Install dependencies
@@ -9,6 +12,8 @@ pip3 install -r requirements.txt
 
 - Download yelp dataset from here [Yelp Dataset](https://www.yelp.com/dataset/download)
 - Download Tableau Reader from here [Tableau Reader](https://www.tableau.com/products/reader)
+
+# Gathering the most influential features
 
 **ETL Steps**
 
